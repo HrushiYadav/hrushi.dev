@@ -41,7 +41,7 @@ const projects = [
     description:
       "rag application — upload pdfs, pptx, images and chat with them using azure ai search + openai",
     role: "creator",
-    period: "2025",
+    period: "apr 2025",
     achievements: [
       "full rag pipeline: upload → parse → chunk → embed → index → query → answer",
       "hybrid search with azure ai search (keyword + semantic + vector)",
@@ -61,7 +61,7 @@ const projects = [
     description:
       "side-by-side comparison of 4 search paradigms: lexical, fuzzy, phonetic, and semantic",
     role: "creator",
-    period: "2025",
+    period: "apr 2025",
     achievements: [
       "demonstrates why different search types return different results for the same query",
       "elasticsearch for traditional search + chromadb for semantic search",
@@ -80,7 +80,7 @@ const projects = [
     description:
       "windows window manager — keyboard-driven window snapping, resizing, and multi-monitor support",
     role: "creator",
-    period: "2024",
+    period: "jan 2026",
     achievements: [
       "hotkey-driven window management with size cycling",
       "multi-monitor support with proper win32 interop",
