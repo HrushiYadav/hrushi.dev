@@ -20,7 +20,7 @@ export function Header() {
         </div>
       </div>
       <p className="leading-relaxed animate-fade-in-up">
-        i spent 3.5 years building .net apis, react frontends, and cms systems
+        i spent nearly 4 years building .net apis, react frontends, and cms systems
         — then made the jump to ai. now i build llm-powered applications, rag
         pipelines, and agent systems that run in real enterprise environments,
         not just demos.

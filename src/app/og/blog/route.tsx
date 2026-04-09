@@ -40,7 +40,7 @@ export async function GET(request: Request) {
         }}
       >
         <img
-          src="https://hrushiyadav.com/avatar.png"
+          src="https://hrushiyadav.com/avatar.jpg"
           style={{
             position: "absolute",
             bottom: "40px",

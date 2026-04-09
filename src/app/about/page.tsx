@@ -10,7 +10,7 @@ const principles = [
   {
     title: "compound over time",
     description:
-      "3.5 years of .net gave me production instincts that most ai devs skip. debugging distributed systems, writing apis that handle real traffic, shipping code that other teams depend on. every skill compounds — nothing is wasted.",
+      "nearly 4 years of .net gave me production instincts that most ai devs skip. optimizing build times, leading cms projects end-to-end, replacing 20 logic apps with a single centralized api, load testing with jmeter, shipping react apps with redux — every skill compounds. nothing is wasted.",
   },
   {
     title: "read widely, build deeply",
@@ -73,7 +73,7 @@ export default function AboutPage() {
 
       <p className="text-[var(--foreground)] mb-12 leading-relaxed">
         i&apos;m hrushikesh — an ai developer at te connectivity in bengaluru. i
-        spent 3.5 years in .net and react, then made the jump to building
+        spent nearly 4 years in .net and react, then made the jump to building
         llm-powered systems. i like shipping things that work in production, not
         just in demos.
       </p>

@@ -10,7 +10,7 @@ const principles = [
   {
     title: "compound over time",
     description:
-      "3.5 years of .net gave me production instincts. every skill compounds — nothing is wasted.",
+      "nearly 4 years of .net — optimizing apps, leading cms projects, replacing 20 logic apps with one api. nothing is wasted.",
   },
   {
     title: "read widely, build deeply",
