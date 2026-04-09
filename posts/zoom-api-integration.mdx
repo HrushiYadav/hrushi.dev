@@ -1,0 +1,164 @@
+---
+title: "Zoom Meetings API Integration Guide"
+description: "A step-by-step guide to integrating Zoom's API for automating meeting scheduling with Node.js and Express."
+date: "2024-08-30"
+---
+
+Integrating Zoom's API allows you to automate meeting scheduling and management. With this integration, you can schedule and manage meetings without needing a paid Zoom plan. Here's a step-by-step guide to get you started with Zoom API integration using Node.js and Express.
+
+## Prerequisites
+
+- Basic knowledge of Node.js and Express.
+- A Zoom account.
+- Node.js and npm installed on your machine.
+
+## Step-by-Step Instructions
+
+### 1. Create a Zoom App
+
+- Create a Zoom Account: If you don't have one, sign up at [Zoom Marketplace](https://marketplace.zoom.us/).
+- Develop an App: Go to the Zoom Marketplace and click on the "Develop" icon.
+- Build App: Click on "Build App" and select "Server to Server OAuth" app type.
+- Store Credentials: After creating the app, store the following details securely:
+
+```
+ZOOM_CLIENT_ID
+ZOOM_CLIENT_SECRET
+ZOOM_ACCOUNT_ID
+```
+
+### 2. Set Up Your Project
+
+Create a new folder for your project and initialize it with npm.
+
+```bash
+mkdir zoom-meeting-integration
+cd zoom-meeting-integration
+npm init -y
+```
+
+Install the required libraries:
+
+```bash
+npm install axios body-parser dotenv express
+```
+
+Create a `.env` file in the root directory and add your Zoom credentials:
+
+```
+ZOOM_CLIENT_ID=YOUR_ZOOM_CLIENT_ID
+ZOOM_CLIENT_SECRET=YOUR_ZOOM_CLIENT_SECRET
+ZOOM_ACCOUNT_ID=YOUR_ZOOM_ACCOUNT_ID
+```
+
+### 3. Implement API Integration
+
+Create a file named `index.js` and set up your basic Express server:
+
+```js
+const express = require('express');
+const bodyParser = require('body-parser');
+const axios = require('axios');
+require('dotenv').config();
+
+const app = express();
+app.use(bodyParser.json());
+
+// Your code will go here
+
+app.listen(3000, () => {
+  console.log('Server is running on port 3000');
+});
+```
+
+Get an OAuth token from Zoom:
+
+```js
+async function getAccessToken() {
+  const response = await axios.post('https://zoom.us/oauth/token', null, {
+    params: {
+      grant_type: 'account_credentials',
+    },
+    auth: {
+      username: process.env.ZOOM_CLIENT_ID,
+      password: process.env.ZOOM_CLIENT_SECRET,
+    },
+  });
+  return response.data.access_token;
+}
+```
+
+API Payload for scheduling a meeting:
+
+```json
+{
+  "topic": "Sample Meeting",
+  "type": 1,
+  "duration": 30,
+  "start_time": "2024-09-01T10:00:00Z",
+  "agenda": "Discuss project updates"
+}
+```
+
+Schedule a meeting endpoint:
+
+```js
+app.post('/schedule-meeting', async (req, res) => {
+  try {
+    const token = await getAccessToken();
+    const meetingData = {
+      topic: 'Sample Meeting',
+      type: 1,
+      duration: 30,
+      start_time: '2024-09-01T10:00:00Z',
+      agenda: 'Discuss project updates',
+    };
+
+    const response = await axios.post(
+      'https://api.zoom.us/v2/users/me/meetings',
+      meetingData,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+      }
+    );
+
+    res.json(response.data);
+  } catch (error) {
+    res.status(error.response ? error.response.status : 500).send(error.message);
+  }
+});
+```
+
+Retrieve meeting link:
+
+```js
+app.get('/meeting-link/:meetingId', async (req, res) => {
+  try {
+    const token = await getAccessToken();
+    const meetingId = req.params.meetingId;
+
+    const response = await axios.get(
+      `https://api.zoom.us/v2/meetings/${meetingId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    res.json({ join_url: response.data.join_url });
+  } catch (error) {
+    res.status(error.response ? error.response.status : 500).send(error.message);
+  }
+});
+```
+
+## Next Steps
+
+- **Send Emails**: After retrieving the meeting link, you can use any mail service (e.g., Nodemailer) to send the meeting link to participants.
+- **Meeting Features**: Note that the API for adding participants may require a paid Zoom plan. For free plans, you can only schedule meetings and share the links manually.
+
+For a complete implementation, check out the [GitHub repository](https://github.com/HrushiYadav/Zoom-Meeting-Scheduler).
