@@ -99,44 +99,10 @@ function CustomImage(props: React.ImgHTMLAttributes<HTMLImageElement>) {
   return <img alt={props.alt} className="rounded-lg" {...props} />
 }
 
-async function Pre({
+function Pre({
   children,
   ...props
-}: React.HtmlHTMLAttributes<HTMLPreElement>) {
-  // Extract className from the children code tag
-  const codeElement = Children.toArray(children).find(
-    (child) => isValidElement(child) && child.type === "code",
-  ) as React.ReactElement<HTMLPreElement> | undefined
-
-  const className = codeElement?.props?.className ?? ""
-  const isCodeBlock =
-    typeof className === "string" && className.startsWith("language-")
-
-  if (isCodeBlock) {
-    const lang = className.split(" ")[0]?.split("-")[1] ?? ""
-
-    if (!lang) {
-      return <code {...props}>{children}</code>
-    }
-
-    const code = String(codeElement?.props.children)
-    const html = await codeToHtml(code, {
-      lang,
-      themes: {
-        dark: "vesper",
-        light: "vitesse-light",
-      },
-    })
-
-    return (
-      <div className="group relative">
-        <CopyButton text={code.trimEnd()} />
-        <div dangerouslySetInnerHTML={{ __html: html }} />
-      </div>
-    )
-  }
-
-  // If not, return the component as is
+}: React.HTMLAttributes<HTMLPreElement>) {
   return <pre {...props}>{children}</pre>
 }
 

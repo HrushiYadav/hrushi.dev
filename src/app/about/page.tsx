@@ -129,7 +129,7 @@ export default function AboutPage() {
       </section>
 
       {/* Currently */}
-      <section className="mb-16">
+      {/* <section className="mb-16">
         <h2 className="text-2xl font-bold mb-6 flex items-center text-[var(--heading)]">
           <span className="text-accent mr-2">*</span> currently exploring
         </h2>
@@ -141,7 +141,7 @@ export default function AboutPage() {
             </li>
           ))}
         </ul>
-      </section>
+      </section> */}
     </main>
   )
 }

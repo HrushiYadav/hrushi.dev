@@ -41,7 +41,7 @@ export default function HomePage() {
         viewAllHref="/projects"
         viewAllText="all projects"
       />
-      <AboutSection />
+      {/* <AboutSection /> */}
       <LinksSection />
     </>
   )
