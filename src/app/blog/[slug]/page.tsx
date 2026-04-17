@@ -1,12 +1,21 @@
 import { notFound } from "next/navigation"
 import Link from "next/link"
 import { MDX } from "./mdx"
-import { getPostBySlug, getAdjacentPosts, getReadingTime } from "@/lib/blog"
+import {
+  getPostBySlug,
+  getAdjacentPosts,
+  getReadingTime,
+  getPublishedPosts,
+} from "@/lib/blog"
 import { formatDateLong } from "@/lib/utils"
 import type { Metadata } from "next"
 
 type PageProps = {
   params: Promise<{ slug: string }>
+}
+
+export function generateStaticParams() {
+  return getPublishedPosts().map((post) => ({ slug: post.slug }))
 }
 
 export async function generateMetadata({
@@ -23,6 +32,9 @@ export async function generateMetadata({
   return {
     title: post.metadata.title,
     description: post.metadata.description,
+    alternates: {
+      canonical: `/blog/${post.slug}`,
+    },
     openGraph: {
       title: post.metadata.title,
       description: post.metadata.description,

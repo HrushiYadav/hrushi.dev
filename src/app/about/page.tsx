@@ -150,6 +150,9 @@ export const metadata: Metadata = {
   title: "About",
   description:
     "Books, principles, and what I'm currently exploring.",
+  alternates: {
+    canonical: "/about",
+  },
   openGraph: {
     images: [
       {

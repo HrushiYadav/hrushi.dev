@@ -23,6 +23,9 @@ export default function WorkPage() {
 export const metadata: Metadata = {
   title: "Work",
   description: "Work experience — from .NET to AI at TE Connectivity.",
+  alternates: {
+    canonical: "/work",
+  },
   openGraph: {
     images: [
       {

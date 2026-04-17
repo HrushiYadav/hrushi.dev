@@ -18,6 +18,9 @@ export const metadata: Metadata = {
   },
   description:
     "AI Developer. Building LLM systems, RAG pipelines, and agent architectures in production.",
+  alternates: {
+    canonical: "/",
+  },
   openGraph: {
     title: "Hrushikesh Yadav",
     description:

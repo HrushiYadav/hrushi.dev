@@ -48,6 +48,9 @@ export default async function BlogPage() {
 export const metadata: Metadata = {
   title: "Blog",
   description: "Writings on AI, search, and building things in production.",
+  alternates: {
+    canonical: "/blog",
+  },
   openGraph: {
     images: [
       {

@@ -117,6 +117,9 @@ export default function ProjectsPage() {
 export const metadata: Metadata = {
   title: "Projects",
   description: "Projects and open source contributions by Hrushikesh Yadav.",
+  alternates: {
+    canonical: "/projects",
+  },
   openGraph: {
     images: [
       {
