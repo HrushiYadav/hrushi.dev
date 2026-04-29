@@ -3,6 +3,7 @@ import { Geist_Mono } from "next/font/google"
 import "./globals.css"
 import { Navbar } from "../components/navbar"
 import { ThemeProvider } from "../components/theme-provider"
+import { ClientLayout } from "../components/human-machine-toggle"
 
 const geistMono = Geist_Mono({
   subsets: ["latin"],
@@ -61,7 +62,7 @@ export default function RootLayout({
         <ThemeProvider>
           <div className="max-w-4xl mx-auto px-4 py-8">
             <Navbar />
-            {children}
+            <ClientLayout>{children}</ClientLayout>
           </div>
         </ThemeProvider>
       </body>
