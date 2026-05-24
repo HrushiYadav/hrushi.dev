@@ -11,7 +11,7 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        mono: ["Monaco", "Courier New", "monospace"],
+        mono: ["var(--font-geist-mono)"],
       },
       colors: {
         background: "var(--background)",
