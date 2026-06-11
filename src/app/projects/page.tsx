@@ -24,17 +24,18 @@ const projects = [
     href: "https://github.com/HrushiYadav/ds-agents",
   },
   {
-    title: "dify — mcp server streaming fix",
+    title: "mem0 — ai memory layer contributions",
     description:
-      "fixed mcp server tool streaming in agent mode for dify, a 50k+ star llm app platform",
+      "fixed critical bugs across the python sdk for mem0, an open source ai memory layer with 25k+ stars",
     role: "contributor",
-    period: "mar 2026",
+    period: "jun 2026",
     achievements: [
-      "diagnosed and fixed streaming failure in mcp server tool calls during agent mode",
-      "pr #32541 — under review by maintainers",
+      "4 prs merged: chromadb $not filter silently dropping conditions, pgvector empty payload truthiness bug, dead code cleanup, hybrid search degradation warning",
+      "5 prs open: memory ttl expiry, metadata preservation on update, delete_all pagination, vision crash fix, server error code correction",
+      "bugs span vector stores, scoring, vision pipeline, and server layer — each with targeted tests",
     ],
-    technologies: ["python", "mcp", "sse"],
-    href: "https://github.com/langgenius/dify/pull/32541",
+    technologies: ["python", "chromadb", "pgvector", "fastapi", "pytest"],
+    href: "https://github.com/mem0ai/mem0/pulls?q=author:HrushiYadav",
   },
   {
     title: "talkwithdoc",

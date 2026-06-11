@@ -16,11 +16,11 @@ const projectItems = [
     href: "https://github.com/HrushiYadav/ds-agents",
   },
   {
-    title: "dify — mcp server fix",
+    title: "mem0 — contributions",
     role: "contributor",
     description:
-      "fixed mcp server streaming for agent mode in dify (50k+ stars). pr #32541",
-    href: "https://github.com/langgenius/dify/pull/32541",
+      "4 prs merged fixing critical bugs in chromadb filters, pgvector updates, and hybrid search for mem0 (25k+ stars)",
+    href: "https://github.com/mem0ai/mem0/pulls?q=author:HrushiYadav",
   },
 ]
 
