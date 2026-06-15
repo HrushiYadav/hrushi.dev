@@ -19,7 +19,7 @@ const projectItems = [
     title: "mem0 — contributions",
     role: "contributor",
     description:
-      "4 prs merged fixing critical bugs in chromadb filters, pgvector updates, and hybrid search for mem0 (25k+ stars)",
+      "multiple prs merged fixing bugs across vector stores, llm providers, async operations, and client sdk for mem0 (25k+ stars)",
     href: "https://github.com/mem0ai/mem0/pulls?q=author:HrushiYadav",
   },
 ]

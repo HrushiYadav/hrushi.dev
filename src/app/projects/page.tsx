@@ -26,13 +26,13 @@ const projects = [
   {
     title: "mem0 — ai memory layer contributions",
     description:
-      "fixed critical bugs across the python sdk for mem0, an open source ai memory layer with 25k+ stars",
+      "fixing critical bugs across the python and typescript sdks for mem0, an open source ai memory layer with 25k+ stars",
     role: "contributor",
     period: "jun 2026",
     achievements: [
-      "4 prs merged: chromadb $not filter silently dropping conditions, pgvector empty payload truthiness bug, dead code cleanup, hybrid search degradation warning",
-      "5 prs open: memory ttl expiry, metadata preservation on update, delete_all pagination, vision crash fix, server error code correction",
-      "bugs span vector stores, scoring, vision pipeline, and server layer — each with targeted tests",
+      "merged fixes: chromadb $not filter, pgvector truthiness bug, hybrid search warning, vision crash, server error codes, bedrock parsing",
+      "open prs spanning vector stores (redis, weaviate, mongodb, pinecone, chroma), llm providers (anthropic, ollama, litellm, gemini), async memory, and client sdk",
+      "bugs span vector stores, llm integrations, async operations, and server layer with targeted tests for each fix",
     ],
     technologies: ["python", "chromadb", "pgvector", "fastapi", "pytest"],
     href: "https://github.com/mem0ai/mem0/pulls?q=author:HrushiYadav",
