@@ -24,6 +24,25 @@ const projects = [
     href: "https://github.com/HrushiYadav/ds-agents",
   },
   {
+    title: "ragguard",
+    description:
+      "static security scanner for rag pipelines — detects injection, hardcoded secrets, auth gaps, ssrf, and more in python codebases",
+    role: "creator",
+    period: "jun 2026",
+    achievements: [
+      "11 scanners: filter injection, nosql/sql injection, hardcoded secrets, ssrf, command injection, insecure deserialization, tls, auth gaps, secret logging, resource safety",
+      "published on pypi as ragsec — pip install ragsec",
+      "html + markdown report generation with severity badges and remediation guidance",
+    ],
+    technologies: [
+      "python",
+      "click",
+      "jinja2",
+      "rich",
+    ],
+    href: "https://github.com/HrushiYadav/ragGuard",
+  },
+  {
     title: "mem0 — ai memory layer contributions",
     description:
       "fixing critical bugs across the python and typescript sdks for mem0, an open source ai memory layer with 25k+ stars",
@@ -36,6 +55,26 @@ const projects = [
     ],
     technologies: ["python", "chromadb", "pgvector", "fastapi", "pytest"],
     href: "https://github.com/mem0ai/mem0/pulls?q=author:HrushiYadav",
+  },
+  {
+    title: "argocd-gitops",
+    description:
+      "gitops kubernetes deployment with argocd — app of apps pattern, applicationsets, helm charts on a kind local cluster",
+    role: "creator",
+    period: "jun 2026",
+    achievements: [
+      "app of apps pattern with applicationsets for multi-app deployment",
+      "helm chart templating with environment-specific value overrides",
+      "kind local cluster setup with full gitops workflow",
+    ],
+    technologies: [
+      "kubernetes",
+      "argocd",
+      "helm",
+      "kind",
+      "shell",
+    ],
+    href: "https://github.com/HrushiYadav/argocd-gitops",
   },
   {
     title: "talkwithdoc",

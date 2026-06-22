@@ -16,11 +16,11 @@ const projectItems = [
     href: "https://github.com/HrushiYadav/ds-agents",
   },
   {
-    title: "mem0 — contributions",
-    role: "contributor",
+    title: "ragguard",
+    role: "creator",
     description:
-      "multiple prs merged fixing bugs across vector stores, llm providers, async operations, and client sdk for mem0 (25k+ stars)",
-    href: "https://github.com/mem0ai/mem0/pulls?q=author:HrushiYadav",
+      "static security scanner for rag pipelines. 11 scanners detecting injection, secrets, ssrf, auth gaps and more. pip install ragsec",
+    href: "https://github.com/HrushiYadav/ragGuard",
   },
 ]
 
