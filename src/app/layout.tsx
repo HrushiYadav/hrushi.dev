@@ -4,6 +4,7 @@ import "./globals.css"
 import { Navbar } from "../components/navbar"
 import { ThemeProvider } from "../components/theme-provider"
 import { ClientLayout } from "../components/human-machine-toggle"
+import { Analytics } from "@vercel/analytics/next"
 
 const geistMono = Geist_Mono({
   subsets: ["latin"],
@@ -65,6 +66,7 @@ export default function RootLayout({
             <ClientLayout>{children}</ClientLayout>
           </div>
         </ThemeProvider>
+        <Analytics />
       </body>
     </html>
   )
