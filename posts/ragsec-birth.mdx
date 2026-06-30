@@ -1,0 +1,150 @@
+---
+title: "The Birth of ragGuard: How a $not Filter Bug Led to 36 PRs in mem0"
+description: "I was just trying to build a memory agent. Then I found a bug. Then I found it everywhere."
+date: "2026-06-30"
+draft: false
+---
+
+**The Project That Started It**
+
+A few weeks back I was working on a project, an agent that remembers the steps it took, not the user's memories, but its own. Kind of an RL style algorithm that remembers what went wrong so it doesn't repeat the mistake.
+
+I thought of using mem0 for that.
+
+I started with ChromaDB locally, later switched to Qdrant. While using it, I found that mem0's filter layer wasn't handling `$not` properly.
+
+**The Bug**
+
+Before the fix, if a user passed a filter containing `$not`, mem0's Chroma filter converter simply ignored it:
+
+```python
+elif key == "$not":
+    # Handle NOT conditions - ChromaDB doesn't have direct NOT, so we'll skip for now
+    continue
+```
+
+That meant a query like:
+
+```python
+filters = {
+    "$not": [{"status": "archived"}]
+}
+```
+
+did not exclude archived records. The `$not` condition was silently dropped, so the search could return memories the caller explicitly wanted filtered out.
+
+**The Fix**
+
+After the fix, mem0 converts `$not` into equivalent ChromaDB compatible conditions using negated operators.
+
+```python
+{"$not": [{"status": "archived"}]}
+```
+
+becomes:
+
+```python
+{"status": {"$ne": "archived"}}
+```
+
+It also handles comparison and membership operators:
+
+```python
+{"$not": [{"count": {"gt": 5}}]}
+```
+
+becomes:
+
+```python
+{"count": {"$lte": 5}}
+```
+
+And:
+
+```python
+{"$not": [{"status": {"in": ["archived", "deleted"]}}]}
+```
+
+becomes:
+
+```python
+{"status": {"$nin": ["archived", "deleted"]}}
+```
+
+**De Morgan's Laws for Compound Filters**
+
+The fix also applies De Morgan's laws for compound cases.
+
+This:
+
+```python
+{"$not": [{"status": "archived"}, {"type": "draft"}]}
+```
+
+is treated as `NOT(status = archived OR type = draft)`, so it becomes:
+
+```python
+{
+    "$and": [
+        {"status": {"$ne": "archived"}},
+        {"type": {"$ne": "draft"}}
+    ]
+}
+```
+
+And this:
+
+```python
+{"$not": [{"status": "archived", "type": "draft"}]}
+```
+
+is treated as `NOT(status = archived AND type = draft)`, so it becomes:
+
+```python
+{
+    "$or": [
+        {"status": {"$ne": "archived"}},
+        {"type": {"$ne": "draft"}}
+    ]
+}
+```
+
+Before this fix, ChromaDB searches using `$not` filters weren't respecting the exclusion condition. They could silently return results that should have been filtered out.
+
+**One Bug Becomes a Pattern**
+
+Then I noticed something else. Some vector stores don't support keyword search. So when a user runs hybrid search expecting both keyword and semantic matching, they're actually only getting semantic results, silently. No error, no warning. Just a degraded result set that looks the same as a working one.
+
+I added a warning for that case and raised a PR. It got merged.
+
+While digging through this, I kept finding the same shape of problem, injection bugs, missing input validation, silent failures, across different files, different backends. The same mistake, made independently, over and over.
+
+**Building ragGuard**
+
+So I thought, why not build something like an antivirus for RAG apps and vector stores. Scan the codebase, flag the patterns before they ship.
+
+Everyone uses Claude Code now, so building it wasn't a huge lift. I put it on PyPI as [`ragsec`](https://pypi.org/project/ragsec/) ([source on GitHub](https://github.com/HrushiYadav/ragGuard)).
+
+400+ people downloaded it without me posting about it or promoting it anywhere.
+
+![ragsec on PyPI](/pypistats.org.png)
+
+**Going Deeper**
+
+I ran the tool against mem0 itself and found 10+ more bugs. I started raising PRs for each one. Kartik from the mem0 team reviewed them, gave feedback, helped me improve the fixes, and merged them. That review process actually brought back a lot of my confidence.
+
+I kept digging. Right now I'm at 36 merged PRs, with a few more pending review.
+
+![GitHub contributions 2026](/github.com.png)
+
+**What This Actually Changed for Me**
+
+Before this, I used to think open source contribution meant find a repo, check the issues tab, comment on one, raise a PR, wait.
+
+It's simpler than that. You use an open source product. If you find a bug or something that's broken, you fix it. Not because you'll get paid, not for five minutes of attention, but because you actually want to solve the problem.
+
+I became a software engineer to solve problems and contribute to something larger than myself. This is what that actually looks like in practice. I may not be able to do this regularly or at scale, but contribution is contribution, it doesn't matter if it's small or big.
+
+**To the mem0 Team**
+
+Thanks for building this, and thanks for reviewing my work the way you did. If this blog reaches you, you have genuinely great engineers and a great product. I've read your research blog posts and I like the direction you're headed. Hoping for the next breakthrough.
