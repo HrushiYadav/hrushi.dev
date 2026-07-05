@@ -19,7 +19,7 @@ export const metadata: Metadata = {
     template: "%s | Hrushikesh Yadav",
   },
   description:
-    "AI Developer. Building LLM systems, RAG pipelines, and agent architectures in production.",
+"25 y/o, ai engineer at TE Connectivity, bengaluru. i like to reverse engineer things , i have to know why something behaves the way it does. off duty: gym, off-road rides, anime, games, sometimes football.",
   alternates: {
     canonical: "/",
   },
