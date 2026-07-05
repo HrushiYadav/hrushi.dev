@@ -20,10 +20,7 @@ export function Header() {
         </div>
       </div>
       <p className="leading-relaxed animate-fade-in-up">
-        i spent nearly 4 years building .net apis, react frontends, and cms systems
-        — then made the jump to ai. now i build llm-powered applications, rag
-        pipelines, and agent systems that run in real enterprise environments,
-        not just demos.
+        25 y/o, ai engineer at TE Connectivity, bengaluru. i like to reverse engineer things , i have to know why something behaves the way it does. off duty: gym, off-road rides, anime, games, sometimes football.
       </p>
     </header>
   )
