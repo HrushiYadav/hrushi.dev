@@ -1,28 +1,24 @@
 import { ScrambleText } from "@/components/scramble-text"
 import { Metadata } from "next"
 
-const principles = [
+const intro =
+  "i'm hrushikesh, an ai architect at te connectivity, bengaluru. i spent 4 years building dotnet apis and react apps, then a sudden NL-to-SQL project sent me down the AI rabbit hole and i never came back. joined as an ai engineer, now ai architect. these days i build rag pipelines and agents at work, and own the other side of it too: proper sdlc practices and infra so agents run without breaking rules, eval standards, memory pocs. free time, i do oss contributions. i live on my terminal, with my new buddy claude code, though nowadays i'm also friends with opencode."
+
+const howIWork = [
   {
-    title: "build, don't theorize",
+    title: "run it locally",
     description:
-      "i learn by making things work. tutorials are a starting point, not the destination. if i can't run it locally, i don't understand it yet.",
+      "i don't trust my understanding until i've broken something. i learned to code by reverse engineering a pubg hack script, got banned on two accounts figuring it out. same instinct now: i read mem0's code because a filter was behaving weirdly, not because a tutorial told me to.",
   },
   {
-    title: "compound over time",
+    title: "nothing is wasted",
     description:
-      "nearly 4 years of .net gave me production instincts that most ai devs skip. optimizing build times, leading cms projects end-to-end, replacing 20 logic apps with a single centralized api, load testing with jmeter, shipping react apps with redux — every skill compounds. nothing is wasted.",
-  },
-  {
-    title: "read widely, build deeply",
-    description:
-      "i read google research papers and stoic philosophy in the same week. breadth in input, depth in output. the best ideas come from connecting things that don't usually go together.",
-  },
-  {
-    title: "share what you learn",
-    description:
-      "writing about search algorithms forced me to actually understand them. contributing to open source taught me more than any course. if you can't explain it simply, you don't know it well enough.",
+      "4 years of fullstack development taught me how software actually works. i've replaced 20+ logic apps with a single centralized api, load tested with jmeter, shipped react apps people actually use. i've worked on 15+ projects that are in production: few i built from scratch, few i joined later, few i was the guy who handled them when anything went wrong. that's why my agents run in enterprise environments and not just in my terminal.",
   },
 ]
+
+const whyIWrite =
+  "i write blogs about things i read or learn. i've written many but only released a few, because my understanding on that concept wasn't concrete yet. every post that's live cleared that bar. my blogs are a digital representation of my thinking, it's my place on the internet."
 
 const bookCategories = [
   {
@@ -72,19 +68,16 @@ export default function AboutPage() {
       </h1>
 
       <p className="text-[var(--foreground)] mb-12 leading-relaxed">
-        i&apos;m hrushikesh — an ai developer at te connectivity in bengaluru. i
-        spent nearly 4 years in .net and react, then made the jump to building
-        llm-powered systems. i like shipping things that work in production, not
-        just in demos.
+        {intro}
       </p>
 
-      {/* Principles */}
+      {/* How I work */}
       <section className="mb-16">
         <h2 className="text-2xl font-bold mb-6 flex items-center text-[var(--heading)]">
-          <span className="text-accent mr-2">*</span> first principles
+          <span className="text-accent mr-2">*</span> how i work
         </h2>
         <div className="space-y-6">
-          {principles.map((p) => (
+          {howIWork.map((p) => (
             <div key={p.title}>
               <h3 className="text-[var(--heading)] font-semibold mb-1">
                 {p.title}
@@ -97,13 +90,21 @@ export default function AboutPage() {
         </div>
       </section>
 
+      {/* Why I write */}
+      <section className="mb-16">
+        <h2 className="text-2xl font-bold mb-6 flex items-center text-[var(--heading)]">
+          <span className="text-accent mr-2">*</span> why i write
+        </h2>
+        <p className="text-[var(--muted)] leading-relaxed">{whyIWrite}</p>
+      </section>
+
       {/* Books */}
       <section className="mb-16">
         <h2 className="text-2xl font-bold mb-6 flex items-center text-[var(--heading)]">
           <span className="text-accent mr-2">*</span> books
         </h2>
         <p className="text-[var(--muted)] mb-8 leading-relaxed">
-          i read a mixed variety — ai papers one day, stoic philosophy the next.
+          i read a mixed variety: ai papers one day, stoic philosophy the next.
           here are the ones that shaped how i think and work.
         </p>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
@@ -117,8 +118,8 @@ export default function AboutPage() {
                   <li key={book.title}>
                     <span className="text-[var(--heading)]">{book.title}</span>
                     <span className="text-[var(--muted)] text-sm">
-                      {" "}
-                      — {book.author}
+                      {", "}
+                      {book.author}
                     </span>
                   </li>
                 ))}
