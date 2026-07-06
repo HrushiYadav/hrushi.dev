@@ -9,6 +9,7 @@ type ProjectCardProps = {
   achievements: string[]
   technologies: string[]
   href: string
+  storyHref?: string
 }
 
 export function ProjectCard({
@@ -19,6 +20,7 @@ export function ProjectCard({
   achievements,
   technologies,
   href,
+  storyHref,
 }: ProjectCardProps) {
   return (
     <div className="group border border-[var(--border)] p-6 transition-colors hover:border-accent/50">
@@ -36,6 +38,15 @@ export function ProjectCard({
       </p>
 
       <p className="text-[var(--foreground)] mb-6">{description}</p>
+
+      {storyHref && (
+        <Link
+          href={storyHref}
+          className="inline-flex items-center gap-1 mb-6 text-accent hover:underline"
+        >
+          read the story →
+        </Link>
+      )}
 
       <div className="space-y-6">
         <div>

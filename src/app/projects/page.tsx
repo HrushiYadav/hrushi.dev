@@ -4,6 +4,41 @@ import { Metadata } from "next"
 
 const projects = [
   {
+    title: "ragguard",
+    description:
+      "static security scanner for rag pipelines — detects injection, hardcoded secrets, auth gaps, ssrf, and more in python codebases",
+    role: "creator",
+    period: "jun 2026",
+    achievements: [
+      "11 scanners: filter injection, nosql/sql injection, hardcoded secrets, ssrf, command injection, insecure deserialization, tls, auth gaps, secret logging, resource safety",
+      "published on pypi as ragsec — pip install ragsec",
+      "400+ downloads in the first weeks, zero promotion",
+      "html + markdown report generation with severity badges and remediation guidance",
+    ],
+    technologies: [
+      "python",
+      "click",
+      "jinja2",
+      "rich",
+    ],
+    href: "https://github.com/HrushiYadav/ragGuard",
+    storyHref: "/blog/ragsec-birth",
+  },
+  {
+    title: "mem0 — ai memory layer contributions",
+    description:
+      "fixing critical bugs across the python and typescript sdks for mem0, an open source ai memory layer with 51k+ stars",
+    role: "contributor",
+    period: "jun 2026 - present",
+    achievements: [
+      "36 merged prs across every vector store backend: chromadb, pgvector, pinecone, mongodb, weaviate, milvus, redis, elasticsearch, azure ai search, databricks, neptune, upstash",
+      "llm provider fixes: anthropic, bedrock, litellm, gemini, ollama",
+      "async memory and the server layer, each with targeted regression tests",
+    ],
+    technologies: ["python", "typescript", "chromadb", "pgvector", "fastapi", "pytest"],
+    href: "https://github.com/mem0ai/mem0/pulls?q=author:HrushiYadav",
+  },
+  {
     title: "ds-agents",
     description:
       "multi-agent data science system inspired by google's ds-star research",
@@ -24,37 +59,18 @@ const projects = [
     href: "https://github.com/HrushiYadav/ds-agents",
   },
   {
-    title: "ragguard",
+    title: "open source contributions — ray, agno, open-webui, opencode",
     description:
-      "static security scanner for rag pipelines — detects injection, hardcoded secrets, auth gaps, ssrf, and more in python codebases",
-    role: "creator",
-    period: "jun 2026",
-    achievements: [
-      "11 scanners: filter injection, nosql/sql injection, hardcoded secrets, ssrf, command injection, insecure deserialization, tls, auth gaps, secret logging, resource safety",
-      "published on pypi as ragsec — pip install ragsec",
-      "html + markdown report generation with severity badges and remediation guidance",
-    ],
-    technologies: [
-      "python",
-      "click",
-      "jinja2",
-      "rich",
-    ],
-    href: "https://github.com/HrushiYadav/ragGuard",
-  },
-  {
-    title: "mem0 — ai memory layer contributions",
-    description:
-      "fixing critical bugs across the python and typescript sdks for mem0, an open source ai memory layer with 25k+ stars",
+      "fixes and features shipped across the ai infra and tooling i use day to day",
     role: "contributor",
-    period: "jun 2026",
+    period: "2026",
     achievements: [
-      "merged fixes: chromadb $not filter, pgvector truthiness bug, hybrid search warning, vision crash, server error codes, bedrock parsing",
-      "open prs spanning vector stores (redis, weaviate, mongodb, pinecone, chroma), llm providers (anthropic, ollama, litellm, gemini), async memory, and client sdk",
-      "bugs span vector stores, llm integrations, async operations, and server layer with targeted tests for each fix",
+      "agno: fix shipped in v2.6.10",
+      "open-webui: merged pr",
+      "ray: serve pr bounding router retry loops (in review)",
     ],
-    technologies: ["python", "chromadb", "pgvector", "fastapi", "pytest"],
-    href: "https://github.com/mem0ai/mem0/pulls?q=author:HrushiYadav",
+    technologies: ["python", "typescript"],
+    href: "https://github.com/HrushiYadav",
   },
   {
     title: "argocd-gitops",
@@ -140,9 +156,7 @@ export default function ProjectsPage() {
       </h1>
 
       <p className="text-[var(--muted)] mb-12 leading-relaxed">
-        here are some of the projects and open source contributions i&apos;ve
-        worked on. i like building things that solve real problems and
-        contributing to tools i use.
+        some things i&apos;ve built, and tools i use that i&apos;ve fixed.
       </p>
 
       <div className="space-y-12">

@@ -9,18 +9,18 @@ const featuredWorkItems: Item[] = workItems.slice(0, 2)
 
 const projectItems = [
   {
-    title: "ds-agents",
-    role: "creator",
-    description:
-      "multi-agent data science system inspired by google's ds-star research. 7 specialized agents for automated analysis",
-    href: "https://github.com/HrushiYadav/ds-agents",
-  },
-  {
     title: "ragguard",
     role: "creator",
     description:
       "static security scanner for rag pipelines. 11 scanners detecting injection, secrets, ssrf, auth gaps and more. pip install ragsec",
     href: "https://github.com/HrushiYadav/ragGuard",
+  },
+  {
+    title: "mem0 — ai memory layer contributions",
+    role: "contributor",
+    description:
+      "36 merged prs across every vector store, llm provider, async memory, and the server layer of mem0 (51k+ stars)",
+    href: "https://github.com/mem0ai/mem0/pulls?q=author:HrushiYadav",
   },
 ]
 

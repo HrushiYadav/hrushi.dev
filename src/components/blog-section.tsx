@@ -8,7 +8,7 @@ const posts = getPublishedPosts()
     (a, b) =>
       new Date(b.metadata.date).getTime() - new Date(a.metadata.date).getTime()
   )
-  .slice(0, 4)
+  .slice(0, 3)
 
 export function BlogSection() {
   return (

@@ -3,8 +3,16 @@ import type { Item } from "@/components/section-list"
 export const workItems: Item[] = [
   {
     title: "te connectivity",
-    role: "ai developer",
-    period: "jun 2025 - present",
+    role: "ai architect",
+    period: "may 2026 - present",
+    description:
+      "rag pipelines and agents, plus sdlc practices, security and architecture reviews, and the infra agents run on.",
+    href: "https://www.te.com",
+  },
+  {
+    title: "te connectivity",
+    role: "ai engineer",
+    period: "jun 2025 - may 2026",
     description:
       "building llm-powered applications, rag pipelines, and ai agent systems with azure openai",
     href: "https://www.te.com",

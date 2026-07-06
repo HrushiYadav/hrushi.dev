@@ -16,11 +16,11 @@ export function Header() {
         </div>
         <div className="flex items-center gap-2">
           <Building2 className="w-4 h-4" />
-          ai developer at te connectivity
+          ai architect at te connectivity
         </div>
       </div>
       <p className="leading-relaxed animate-fade-in-up">
-        25 y/o, ai engineer at TE Connectivity, bengaluru. i like to reverse engineer things , i have to know why something behaves the way it does. off duty: gym, off-road rides, anime, games, sometimes football.
+        25 y/o, ai architect at TE Connectivity, bengaluru. i like to reverse engineer things — i have to know why something behaves the way it does. off duty: gym, off-road rides, anime, games, sometimes football.
       </p>
     </header>
   )
