@@ -34,7 +34,8 @@ export function ProjectCard({
       </Link>
 
       <p className="text-sm text-[var(--muted)] mb-4">
-        {role} {period && `(${period})`}
+        {role}
+        {period && <span> · {period}</span>}
       </p>
 
       <p className="text-[var(--foreground)] mb-6">{description}</p>
@@ -64,7 +65,7 @@ export function ProjectCard({
             {technologies.map((tech) => (
               <span
                 key={tech}
-                className="px-2 py-1 text-sm text-[var(--muted)] bg-[var(--border)]/50 rounded"
+                className="px-2 py-0.5 text-xs text-[var(--muted)] bg-[var(--border)]/60 rounded-full"
               >
                 {tech.toLowerCase()}
               </span>

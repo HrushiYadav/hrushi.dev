@@ -63,7 +63,7 @@ export default function AboutPage() {
   return (
     <main className="animate-fade-in-up">
       <h1 className="text-4xl font-bold mb-8 text-[var(--heading)]">
-        <span className="text-accent mr-2">*</span>
+        <span className="text-accent accent-glow mr-2">*</span>
         <ScrambleText text="about" />
       </h1>
 
@@ -72,9 +72,9 @@ export default function AboutPage() {
       </p>
 
       {/* How I work */}
-      <section className="mb-16">
+      <section className="mb-16 pt-10 border-t border-[var(--border)]">
         <h2 className="text-2xl font-bold mb-6 flex items-center text-[var(--heading)]">
-          <span className="text-accent mr-2">*</span> how i work
+          <span className="text-accent accent-glow mr-2">*</span> how i work
         </h2>
         <div className="space-y-6">
           {howIWork.map((p) => (
@@ -91,17 +91,17 @@ export default function AboutPage() {
       </section>
 
       {/* Why I write */}
-      <section className="mb-16">
+      <section className="mb-16 pt-10 border-t border-[var(--border)]">
         <h2 className="text-2xl font-bold mb-6 flex items-center text-[var(--heading)]">
-          <span className="text-accent mr-2">*</span> why i write
+          <span className="text-accent accent-glow mr-2">*</span> why i write
         </h2>
         <p className="text-[var(--muted)] leading-relaxed">{whyIWrite}</p>
       </section>
 
       {/* Books */}
-      <section className="mb-16">
+      <section className="mb-16 pt-10 border-t border-[var(--border)]">
         <h2 className="text-2xl font-bold mb-6 flex items-center text-[var(--heading)]">
-          <span className="text-accent mr-2">*</span> books
+          <span className="text-accent accent-glow mr-2">*</span> books
         </h2>
         <p className="text-[var(--muted)] mb-8 leading-relaxed">
           i read a mixed variety: ai papers one day, stoic philosophy the next.
@@ -132,7 +132,7 @@ export default function AboutPage() {
       {/* Currently */}
       {/* <section className="mb-16">
         <h2 className="text-2xl font-bold mb-6 flex items-center text-[var(--heading)]">
-          <span className="text-accent mr-2">*</span> currently exploring
+          <span className="text-accent accent-glow mr-2">*</span> currently exploring
         </h2>
         <ul className="space-y-2 text-[var(--foreground)]">
           {currentlyReading.map((item) => (
