@@ -1,0 +1,182 @@
+---
+title: "Building earshot: Teaching My MacBook to Answer Questions About What It Hears"
+description: "I saw a webcam that answers dozens of questions at once. I wanted to know if I could build the same thing for sound, on a fanless laptop."
+date: "2026-09-30"
+draft: false
+---
+
+**How It Started**
+
+For a few days I had been reading about Jev, TypeSafe's new model that gives you typed decisions with probabilities instead of text. I even tried plugging it into my personal agent, Hermes, as a decision model. That's still pending.
+
+Then I saw [Vertix](https://github.com/drxddy/vertix) on X. A webcam that answers 36 questions about the last few seconds of video, four times a second, fully local. Is a person present? Is the door open? Is anyone on their phone?
+
+My first thought was, what if we made something like this for voice?
+
+**Why Voice**
+
+I've been testing voice models from Sarvam and Smallest AI for a while. The biggest problem I keep running into is latency.
+
+To be fair, there's no decision making involved in those models. It's not the same problem. But I wanted to see how this technology actually gets built. Even if it doesn't fully make sense, can I build something like this?
+
+**The Idea: Encode Once, Ask Many**
+
+Most people use an audio model like this: send the audio, ask a question, wait for it to generate an answer. Want to ask eight questions? Send the audio eight times.
+
+Audio language models are causal. Every token only looks backward. So the audio at the start of the prompt doesn't care what question comes after it. You can process the audio once, keep that state, and fork every question off it in a single batch:
+
+```
+last 3 s of mic audio ──► audio encoder ──► prefix state
+                                              ├─► "Is someone speaking?"   → P(Yes)
+                                              ├─► "Is music playing?"      → P(Yes)
+                                              ├─► "Is there clapping?"     → P(Yes)
+                                              └─► … N questions, one batch
+```
+
+And instead of letting the model write "Yes" or "No", you just read the probability of the Yes token. No text generation, no parsing. Every answer is a number between 0 and 1.
+
+**Getting a Model to Even Load**
+
+I tried three models on my M4 MacBook Air with 16 GB. Each one hit a different wall.
+
+- **Qwen2.5-Omni-3B** crashed with a segfault every time it loaded onto the Mac's GPU.
+- **Gemma 3n** was gated, and after I got access, the download crawled.
+- **Voxtral Mini** was downloading at about 0.5 MB/s. Two hours for one model.
+
+The fix for Qwen was to load only the "thinker", the part that listens and reasons, and skip the parts that generate speech. Peak memory dropped to about 4 GB and it loaded fine.
+
+Honestly, the most frustrating part of this whole project was my Mac. Hermes running in the background, plus these models, on 16 GB. Luckily I had MiniMax and Claude with me.
+
+It even showed up in the benchmarks. My first run said 3.4 seconds per pass. Hermes was running in Docker, and Docker's virtual machine was holding a big chunk of RAM, so the model was swapping to disk. I quit Docker, ran it again, and got 1.5 seconds. Same code, same laptop.
+
+**The Model Was Deaf**
+
+Once it loaded, I asked it "Is someone speaking?" on a clip of my own voice. It said no. P(Yes) = 0.18.
+
+Two bugs, stacked:
+
+```python
+# the processor silently ignored this
+processor(text=prompt, audios=[audio])
+
+# this is what it actually wanted
+processor(text=prompt, audio=audio)
+```
+
+The model never received the audio. It was answering the question from the text alone. After the fix: 0.816. It heard me.
+
+The second one was quieter. The processor was padding every clip to 30 seconds, even my 3 second window. Most of what the model processed was empty padding. Cutting it to the real length brought feature extraction down to about 5 ms per pass.
+
+**The Bug Where the Audio Disappeared Again**
+
+Then I built the batched version, the whole point of the project. It was fast. It was also completely wrong.
+
+Every clip with the same length gave the exact same answers. Silence, room noise, my voice, all identical. The audio wasn't reaching the questions.
+
+The cause was one line:
+
+```python
+# returns None, it modifies the cache in place
+expanded_cache = past_kv.batch_repeat_interleave(N)
+
+# so the model got past_key_values=None
+# and answered every question with no audio at all
+```
+
+No error, no warning. Just confident wrong answers. Same shape of bug I kept finding in mem0: silent failures that look like working results.
+
+**How Do You Know It's Actually Right?**
+
+The batched answers should match asking each question one at a time. So I wrote a test that compares both on every clip.
+
+But a test that always passes proves nothing. Vertix had a nice trick for this: a control mode that deliberately breaks the token positions, and the test must fail.
+
+<Table
+  data={{
+    headers: ["Run", "Max difference vs one-at-a-time"],
+    rows: [
+      ["Normal (fp16)", "0.0074"],
+      ["Positions deliberately wrong", "0.0935"],
+    ],
+  }}
+/>
+
+The normal run only differs by fp16 rounding noise. The broken one is about 13× worse. So the test can actually catch a real bug.
+
+And the speed:
+
+<Table
+  data={{
+    headers: ["Questions", "One at a time", "Batched", "Speedup"],
+    rows: [
+      ["1", "0.56 s", "0.81 s", "0.69×"],
+      ["4", "2.71 s", "1.03 s", "2.6×"],
+      ["8", "5.50 s", "1.36 s", "4.0×"],
+      ["16", "11.15 s", "1.94 s", "5.8×"],
+      ["32", "22.46 s", "2.72 s", "8.3×"],
+    ],
+  }}
+/>
+*M4 MacBook Air 16 GB, fp16, 3 s audio window, 2 minute warm-up, median of 20 passes (10 for 32 questions).*
+
+With one question it's slower, because of the extra step. After that, each extra question is almost free. 32 questions take 2.7 seconds instead of 22.
+
+![Batched vs one-at-a-time latency](/earshot-latency.png)
+
+**Recording My Own Test Set**
+
+To know if the answers were right, I needed labelled clips. Silence, calm speech, angry speech, two voices, music, clapping, typing, knocking, an alarm. 21 clips, 5 seconds each.
+
+It's weird, recording test samples. I messed it up many times. Most of the time my roommates were making noise, so I couldn't get a clean silence clip. I ended up recording the silence clip in my washroom.
+
+The two-voices clips were me talking over the Mac's built-in "Karen" voice. The music clips were songs from YouTube on my phone.
+
+**Silence Doesn't Need a Model**
+
+"Is the room silent?" was the worst question. The model scored 0/3 on the silence clips. Small models are bad at questions about the absence of something.
+
+So I stopped asking the model. Silence is just low volume. I compute it straight from the audio level, which takes microseconds and got 3/3.
+
+That's the same idea Vertix uses: cheap checks where a simple signal is enough, the model only for things that actually need it.
+
+**What It Gets Right, and What It Gets Wrong**
+
+Across the yes/no questions, it caught 24 of the 25 cases where the answer should be Yes. Most answers in the test set are No, so a model that says No to everything would already score in the 80s. The Yes cases are the ones that matter.
+
+What it gets wrong is interesting:
+
+- **"Angry" listens to the words, not the voice.** "Please stop making that noise" scored 0.88 angry, even when I said it normally. The sentence sounds like a complaint, so the model thinks it is one.
+- **Singing counts as speaking.** For the model, a person singing in a song is someone speaking.
+- **Typing sounds like clapping.** Sharp repeated taps.
+
+And 21 clips is a small test set. These numbers tell me it works, not how well it works in every room.
+
+**The First Time It Worked Live**
+
+The most satisfying moment was running it live. I knock on the table and the knock bar goes up. I clap, clapping fires. I play music, music fires.
+
+There's a delay, about 1.5 seconds per pass for 11 questions on a fanless laptop. But it felt really good. Same feeling I had when I built ANN, CNN and A3C agents and watched one actually play Pac-Man.
+
+![Earshot live demo](/earshot-demo.gif)
+
+**How I Built It**
+
+My process is the same for every project. I spend a lot of time just planning. I decide what exactly I want to build and call that version 1. Then I break it into stages, each with a test that has to pass before moving on.
+
+For earshot, I discussed the stages and tests with Claude, MiniMax Code wrote the code, and I ran the tests and made the calls. Stage 0 was loading a model. Stage 3 was the batched scorer. Stage 5 was the live dashboard. Every bug in this post was caught because a stage had a test it had to pass.
+
+**What's Next**
+
+I want to put earshot inside one of my agents and compare it side by side: how the agent behaves with a normal voice model, and how it behaves with earshot deciding things like "has the user finished talking?"
+
+And I still need to finish that Jev integration in Hermes.
+
+The code is on GitHub: [earshot](https://github.com/HrushiYadav/earshot).
+
+**What This Changed for Me**
+
+Lately I've been stuck with a lot of mundane stuff. No open source, no side projects. This project got me out of that. It reminded me why I like building things in the first place: I have to know why something behaves the way it does.
+
+**Thanks**
+
+Thanks to [Dhikshith Reddy](https://github.com/drxddy) for building [Vertix](https://github.com/drxddy/vertix) and writing up every measurement, including the bugs. This project wouldn't exist without it. And to the TypeSafe team, whose [Jev launch](https://typesafe.ai/blog/introducing-system-one-models-and-jev) got me thinking about decisions instead of text in the first place.

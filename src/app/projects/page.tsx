@@ -4,6 +4,29 @@ import { Metadata } from "next"
 
 const projects = [
   {
+    title: "earshot",
+    description:
+      "local voice decision engine: answers 11 yes/no questions about the last 3 s of audio in one batched pass on a fanless m4 macbook air, no text generated",
+    role: "creator",
+    period: "oct 2026",
+    achievements: [
+      "encode the audio once, fork every question off the shared cache: 32 questions in 2.7 s instead of 22 s (8.3×)",
+      "exactness test with a control that must fail: 0.0074 normal vs 0.0935 with wrong positions",
+      "two tiers: silence from the audio level, everything else from qwen2.5-omni-3b",
+      "live dashboard with ema + hysteresis, ad-hoc questions, jsonl logging",
+    ],
+    technologies: [
+      "python",
+      "pytorch",
+      "mps",
+      "qwen2.5-omni",
+      "pydantic",
+      "rich",
+    ],
+    href: "https://github.com/HrushiYadav/earshot",
+    storyHref: "/blog/earshot",
+  },
+  {
     title: "ragguard",
     description:
       "static security scanner for rag pipelines — detects injection, hardcoded secrets, auth gaps, ssrf, and more in python codebases",
