@@ -156,7 +156,7 @@ Across the yes/no questions, it caught 24 of the 25 cases where the answer shoul
 
 What it gets wrong is interesting:
 
-- **"Angry" listens to the words, not the voice.** "Please stop making that noise" scored 0.88 angry, even when I said it normally. The sentence sounds like a complaint, so the model thinks it is one.
+- **"Angry" mixes tone and meaning.** "Please stop making that noise" scored 0.88 angry, even when I said it normally. The sentence sounds like a complaint, and that pushed the score up. Later I found it does hear tone really well when the words are neutral (more on that below). The problem is when the words themselves sound angry.
 - **Singing counts as speaking.** For the model, a person singing in a song is someone speaking.
 - **Typing sounds like clapping.** Sharp repeated taps.
 
@@ -205,7 +205,7 @@ Second, questions about speech. Things a sound label can't really capture.
 
 This is where it flips. CLAP matches sounds to descriptions, but it was never trained to understand words or how something is said. earshot runs on a model that was.
 
-The calm vs angry result is the one I like most. Same actors, same two sentences, only the tone changes. So it can't cheat by reading the words, which was exactly my problem with the "angry" question earlier.
+The calm vs angry result is the one I like most. Same actors, same two sentences, only the tone changes. So the words can't give it away, and it still gets it almost perfect. That changed how I read my earlier "angry" mistake: the model does hear tone, but when the words sound like a complaint, the meaning can win over a calm voice.
 
 A few honest notes. The emotions are acted. The "stop" clips are single words, not sentences. These models may have seen these datasets during training. And speaking vs singing separates well, but at a 0.5 cut-off it only caught 37% of the songs, so the threshold needs tuning.
 
