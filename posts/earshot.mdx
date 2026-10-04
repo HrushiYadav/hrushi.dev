@@ -1,7 +1,7 @@
 ---
 title: "Building earshot: Teaching My MacBook to Answer Questions About What It Hears"
 description: "I saw a webcam that answers dozens of questions at once. I wanted to know if I could build the same thing for sound, on a fanless laptop."
-date: "2026-09-30"
+date: "2026-10-06"
 draft: false
 ---
 
@@ -35,6 +35,16 @@ last 3 s of mic audio ──► audio encoder ──► prefix state
 
 And instead of letting the model write "Yes" or "No", you just read the probability of the Yes token. No text generation, no parsing. Every answer is a number between 0 and 1.
 
+**What This Is, and What It Isn't**
+
+I want to be clear about this before anything else.
+
+The idea isn't new. Reusing a shared prefix is standard in LLM serving, reading the probability of "Yes" is a known trick for classification, and Vertix already did all of this for vision. What I wanted to find out was whether it works for audio, locally on a laptop, and whether I could prove the batched answers are exact.
+
+It's also not Jev. Jev is a model TypeSafe trained from scratch so its probabilities can be trusted. earshot is a trick on top of an off-the-shelf model, Qwen2.5-Omni-3B, and its probabilities are not calibrated. You'll see that in the mistakes section.
+
+And it's not a replacement for voice models like the ones from Sarvam or Smallest AI. It doesn't transcribe or speak. It's a small decision layer that could sit next to one, answering things like "is someone talking?" or "did they say stop?". Dedicated sound classifiers are faster and more accurate for fixed labels. I tested this further down. What earshot adds is asking many questions in plain English, at once, with no training.
+
 **Getting a Model to Even Load**
 
 I tried three models on my M4 MacBook Air with 16 GB. Each one hit a different wall.
@@ -43,7 +53,7 @@ I tried three models on my M4 MacBook Air with 16 GB. Each one hit a different w
 - **Gemma 3n** was gated, and after I got access, the download crawled.
 - **Voxtral Mini** was downloading at about 0.5 MB/s. Two hours for one model.
 
-The fix for Qwen was to load only the "thinker", the part that listens and reasons, and skip the parts that generate speech. Peak memory dropped to about 4 GB and it loaded fine.
+The fix for Qwen was to load only the "thinker", the part that listens and reasons, and skip the parts that generate speech. The weights take about 4 GB and it loaded fine.
 
 Honestly, the most frustrating part of this whole project was my Mac. Hermes running in the background, plus these models, on 16 GB. Luckily I had MiniMax and Claude with me.
 
@@ -117,6 +127,7 @@ And the speed:
     ],
   }}
 />
+
 *M4 MacBook Air 16 GB, fp16, 3 s audio window, 2 minute warm-up, median of 20 passes (10 for 32 questions).*
 
 With one question it's slower, because of the extra step. After that, each extra question is almost free. 32 questions take 2.7 seconds instead of 22.
@@ -151,13 +162,64 @@ What it gets wrong is interesting:
 
 And 21 clips is a small test set. These numbers tell me it works, not how well it works in every room.
 
+**How It Compares to Real Audio Classifiers**
+
+After the first draft, I asked myself the obvious question someone would ask: why use a 3B language model for this? There are small models built just for sounds.
+
+So I tested it, in two parts.
+
+First, fixed sound labels. ESC-50 is a public dataset of 5 second clips across 50 everyday sounds: dogs, rain, door knocks, sirens. I compared earshot with CLAP, a model that matches audio to text descriptions, and with a small classifier trained on ESC-50 itself.
+
+<Table
+  data={{
+    headers: ["Method", "Accuracy", "Time per clip"],
+    rows: [
+      ["Trained classifier (AST + logistic regression)", "90.5%", "129 ms"],
+      ["CLAP", "88.3%", "26 ms"],
+      ["earshot, calibrated", "85.0%", "4.3 s"],
+      ["earshot, raw", "82.3%", "4.3 s"],
+    ],
+  }}
+/>
+
+*ESC-50 fold 1, 400 clips, M4 MacBook Air. CLAP got the same readable descriptions as earshot. With the raw label names it scored 83.8%.*
+
+earshot lost. Less accurate, and about 170 times slower than CLAP. If you just need to know which sound it is, use CLAP or a trained classifier.
+
+One interesting bit: earshot kept answering "engine" for anything that hums. Washing machines, airplanes, vacuum cleaners. Every question has its own lean towards "Yes", and the engine question leaned the most. When I measured each question's lean on silence and subtracted it, accuracy went from 82.3% to 85.0%.
+
+Second, questions about speech. Things a sound label can't really capture.
+
+<Table
+  data={{
+    headers: ["Task", "Clips", "earshot", "CLAP (best to worst prompt)"],
+    rows: [
+      ["Calm vs angry, same sentence", "384", "0.99", "0.82 to 0.37"],
+      ["Speaking vs singing, same words", "384", "0.93", "0.74 to 0.62"],
+      ["\"stop\" vs other words", "500", "0.999", "0.59 to 0.36"],
+    ],
+  }}
+/>
+
+*AUROC: 1.0 means the scores separate the two groups perfectly, 0.5 is a coin flip. CLAP was tried with three different prompt pairs per task. Datasets: RAVDESS and Google Speech Commands.*
+
+This is where it flips. CLAP matches sounds to descriptions, but it was never trained to understand words or how something is said. earshot runs on a model that was.
+
+The calm vs angry result is the one I like most. Same actors, same two sentences, only the tone changes. So it can't cheat by reading the words, which was exactly my problem with the "angry" question earlier.
+
+A few honest notes. The emotions are acted. The "stop" clips are single words, not sentences. These models may have seen these datasets during training. And speaking vs singing separates well, but at a 0.5 cut-off it only caught 37% of the songs, so the threshold needs tuning.
+
+So my answer to "why a language model?" is: don't use it for what classifiers already do well. Use it for questions about what was said, and how it was said.
+
+![earshot vs CLAP vs a trained classifier](/earshot-v02-comparison.png)
+
 **The First Time It Worked Live**
 
 The most satisfying moment was running it live. I knock on the table and the knock bar goes up. I clap, clapping fires. I play music, music fires.
 
 There's a delay, about 1.5 seconds per pass for 11 questions on a fanless laptop. But it felt really good. Same feeling I had when I built ANN, CNN and A3C agents and watched one actually play Pac-Man.
 
-![Earshot live demo](/earshot-demo.gif)
+![earshot reacting live to a real recording](/earshot-demo.gif)
 
 **How I Built It**
 
