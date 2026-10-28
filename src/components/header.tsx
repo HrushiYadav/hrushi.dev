@@ -20,7 +20,7 @@ export function Header() {
         </div>
       </div>
       <p className="leading-relaxed text-pretty max-w-[60ch] animate-fade-in-up">
-        25 y/o, ai architect at TE Connectivity, bengaluru. i like to reverse engineer things — i have to know why something behaves the way it does. off duty: gym, off-road rides, anime, games, sometimes football.
+        26 y/o, ai architect at TE Connectivity, bengaluru. i like to reverse engineer things — i have to know why something behaves the way it does. off duty: gym, off-road rides, anime, games, sometimes football.
       </p>
     </header>
   )
